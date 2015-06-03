@@ -73,7 +73,7 @@ var jsTreeMaker = (function () {
         var displayElement = document.createElement("span");
         displayElement.innerHTML = nodeItem.Display;
         displayElement.setAttribute("id", generateCustomId(displayPrefix, nodeItem.Id));
-        displayElement.onclick = function () {
+        displayElement.onclick = function (event) {
             var target = event.currentTarget.parentElement;
             if (selectedListItem) {
                 var previousSelectedListItem = document.getElementById(generateCustomId(displayPrefix, selectedListItem.getAttribute('id')));
@@ -123,7 +123,7 @@ var jsTreeMaker = (function () {
         return prefix + baseId;
     }
     //Used to insert the available actions for any given list item: add/remove
-    var generateListActions = function(listElement) {
+    var generateListActions = function(listElement,allowAdd,allowRemove,allowEdit) {
         var actionContainer = document.createElement("span");
         var elementId = listElement.getAttribute("id");
         actionContainer.appendChild(generateActionItem("Collapse", function (actionItemElement) {
@@ -141,7 +141,8 @@ var jsTreeMaker = (function () {
                 childContainer.style.display = newDisplay;
             }
         }));
-        if (jsTreeMakerOptions.ActionItemOptions["Remove"].IsAllowed) {
+        var canRemove = allowRemove !== undefined ? allowRemove : jsTreeMakerOptions.ActionItemOptions["Remove"].IsAllowed;
+        if (canRemove) {
             actionContainer.appendChild(generateActionItem("Remove", function () {
                 var currentElement = selectedListItem || listElement;
                 elementId = currentElement.getAttribute("id");
@@ -151,18 +152,20 @@ var jsTreeMaker = (function () {
                 }
             }));
         }
-        if (jsTreeMakerOptions.ActionItemOptions["Add"].IsAllowed) {
+        var canAdd = allowAdd !== undefined ? allowAdd : jsTreeMakerOptions.ActionItemOptions["Add"].IsAllowed;
+        if (canAdd) {
             actionContainer.appendChild(generateActionItem("Add", function () {
                 var currentElement = selectedListItem || listElement;
                 elementId = currentElement.getAttribute("id");
-                var userData = prompt("Enter display text:");
+                var userData = prompt("Enter display text:","");
                 addedIdCounter++;
                 var newNode = { Display: userData, Id: generateCustomId(newPrefix, addedIdCounter), ParentId: elementId, Children: [] };
                 createNode(newNode);
                 addNodeToData(newNode);
             }));
         }
-        if (jsTreeMakerOptions.ActionItemOptions["Edit"].IsAllowed) {
+        var canEdit = allowEdit !== undefined ? allowEdit : jsTreeMakerOptions.ActionItemOptions["Edit"].IsAllowed;
+        if (canEdit) {
             var editActionItem = generateActionItem("Edit", function() {
                 var currentElement = selectedListItem || listElement;
                 editNodeData(currentElement);
@@ -209,7 +212,7 @@ var jsTreeMaker = (function () {
         var nodeWithIdOnly = { Id: element.getAttribute("id") };
         var nodeSource = findNodeSourceInData(nodeWithIdOnly, currentData);
         var nodeIndex = findNodeIndexInNodeSource(nodeWithIdOnly.Id, nodeSource);
-        var promptData = prompt("Enter new text:");
+        var promptData = prompt("Enter new text:", nodeSource[nodeIndex].Display);
         nodeSource[nodeIndex].Display = promptData;
         var elementTextChild = document.getElementById(generateCustomId(displayPrefix, nodeWithIdOnly.Id));
         elementTextChild.innerHTML = promptData;
@@ -233,12 +236,15 @@ var jsTreeMaker = (function () {
             }
         }
     }
+    var setTreeView = function(treeData) {
+        generateListActions(jsTreeMakerOptions.Container);
+        currentData = JSON.parse(JSON.stringify(treeData)); //clone the array
+        generateNodes(currentData);
+    }
     function init(options) {
         mergeRecursive(jsTreeMakerOptions, options);
         jsTreeMakerOptions.Container.setAttribute("id", "0");
-        generateListActions(jsTreeMakerOptions.Container);
-        currentData = JSON.parse(JSON.stringify(jsTreeMakerOptions.TreeViewData)); //clone the array
-        generateNodes(currentData);
+        setTreeView(jsTreeMakerOptions.TreeViewData);
     }
     function returnDataAsObject() {
         return currentData;
@@ -246,9 +252,13 @@ var jsTreeMaker = (function () {
     function returnDataAsJsonString() {
         return JSON.stringify(currentData);
     }
-
+    function loadTree(treeData) {
+        jsTreeMakerOptions.Container.innerHTML = '';
+        setTreeView(treeData);
+    }
     return {
         Initialize: init,
+        LoadTree: loadTree,
         GetDataAsObject: returnDataAsObject,
         GetDataAsJsonString: returnDataAsJsonString
     }
