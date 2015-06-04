@@ -9,7 +9,7 @@
  - Provide a basic CSS theme that can be change, extended or removed
  - Remove use of Prompt and utilize a dynamic input control
 
-**Sample Usage:** [jsTreeMaker Fiddle](http://jsfiddle.net/jasonwilczak/18Lhhjzj/70/)
+**Sample Usage:** [jsTreeMaker Fiddle v1.0](https://jsfiddle.net/jasonwilczak/ofg7Lkvm/)
 
 **API:**
 
