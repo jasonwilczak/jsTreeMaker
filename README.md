@@ -9,7 +9,7 @@
  - Provide a basic CSS theme that can be change, extended or removed
  - Remove use of Prompt and utilize a dynamic input control
 
-**Sample Usage:** [jsTreeMaker Fiddle v1.0](https://jsfiddle.net/jasonwilczak/ofg7Lkvm/)
+**Sample Usage:** [jsTreeMaker Fiddle v1.3](https://jsfiddle.net/ofg7Lkvm/3/)
 
 **API:**
 
@@ -56,6 +56,7 @@
 	 - **TreeViewData**: Initial data load to show for the tree
 
     
+```    
     var jsTreeMakerOptions = {
         PlaceListActionsAfterText: true,
         MainListId: 0,
@@ -100,3 +101,4 @@
         },
         TreeViewData: []
     }
+```
