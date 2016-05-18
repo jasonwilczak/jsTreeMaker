@@ -17,7 +17,7 @@ var jsTreeMaker = (function () {
                 IsAllowed: true,
                 Id: "actionItemRemove",
                 DefaultDisplay: ""
-},
+            },
             Add: {
                 Display: "[+]",
                 Title: "Click to Add A Child",
@@ -158,6 +158,7 @@ var jsTreeMaker = (function () {
                 var currentElement = selectedListItem || listElement;
                 elementId = currentElement.getAttribute("id");
                 var userData = prompt("Enter display text:","");
+                if(!userData) return;
                 addedIdCounter++;
                 var newNode = { Display: userData, Id: generateCustomId(newPrefix, addedIdCounter), ParentId: elementId, Children: [] };
                 createNode(newNode);
