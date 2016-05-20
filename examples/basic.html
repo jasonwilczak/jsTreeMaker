@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
+    <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    
+</head>
+<body>
+    <h4>Example From HTML</h4>
+<ul>
+    <li>Test1
+        <ul>
+            <li>Sub Item 1</li>
+        </ul>
+    </li>
+    <li>Test2</li>
+</ul>
+
+<button id="getData">Get Data</button>
+<div id="fromCode">My Data</div>
+
+<script src="../release/jsTreeMaker.min.js"></script>
+<script type="text/javascript">
+var myOptions = {PlaceListActionsAfterText:false,Container: document.getElementById("fromCode"),TreeViewData: [
+    {Display: "Test1",Id:1,ParentId:0,Children: [
+        {Display: "Test1a",Id:2,ParentId:1,Children: [
+            {Display: "Test1a1",Id:3,ParentId:2,Children: []}
+        ]},
+        {Display: "Test1b",Id:4,ParentId:1,Children: []}
+    ]},
+    {Display: "Test2",Id:5,ParentId:0,Children: [
+        {Display: "Test2a",Id:6,ParentId:5,Children: []}
+    ]}
+]};
+jsTreeMaker.Initialize(myOptions);
+document.getElementById("getData").onclick = function() {
+ var data = jsTreeMaker.GetDataAsJsonString();
+    alert(data);
+}
+</script>
+</body>
+</html>
